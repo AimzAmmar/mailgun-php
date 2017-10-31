@@ -139,9 +139,18 @@ class MessageBuilder
      */
     public function addToRecipient($address, $variables = null)
     {
+        /*
+        I haven't tested it but to my understanding :
+        as per the documentation, the BatchMessage should be able to purge the queue after reaching 1k recipients without throwing any exception
+        In which case we shouldn't be calling addToRecipient instead calling addRecipient from batch messaging adding a To header.
+        I am adding the same function to batchMessage class. I am hoping that the edits would help.
+        */
+        
+ 
         if ($this->counters['recipients']['to'] > Api::RECIPIENT_COUNT_LIMIT) {
             throw new TooManyParameters(ExceptionMessages::TOO_MANY_PARAMETERS_RECIPIENT);
         }
+      
 
         $variables = is_array($variables) ? $variables : [];
 
